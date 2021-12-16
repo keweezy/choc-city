@@ -44,10 +44,9 @@ const HomePage = () => {
     history(`/albums/${id}`, { state: name });
   };
 
-  console.log(albums);
-
   return (
     <div id="home-page">
+      <h2 className='mb-1'> Chocolate City Entertainment</h2>
       {/* Tab */}
       <Box
         sx={{

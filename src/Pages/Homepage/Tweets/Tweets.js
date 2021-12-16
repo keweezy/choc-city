@@ -13,14 +13,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import Modal from "../../../Component/Modal/Modal";
 
 const Tweets = () => {
-  // helpers
-  let { id } = useParams();
-  let location = useLocation();
-  let history = useNavigate();
 
   // State
   const [tweets, setTweets] = useState([]);
-  const [modal, setModal] = useState({ open: false });
+  const [modal, setModal] = useState({ open: false, value: "", isEdit: false });
 
   useEffect(() => {
     // Get tweets
@@ -29,25 +25,51 @@ const Tweets = () => {
     });
   }, []);
 
-  const editTweet = (id) => {
-    console.log(id);
-  };
+  //   Methods
   const deleteTweet = (id) => {
     axios
       .delete(`https://jsonplaceholder.typicode.com/comments/${id}`)
-      .then(() => axios.get(" https://jsonplaceholder.typicode.com/comments"));
+      .then(() => callBack());
   };
 
   const openModal = () => {
     setModal({ ...modal, open: true });
   };
 
+  const openEditTweet = (id, body) => {
+    setModal({ ...modal, open: true, isEdit: true, id, value: body });
+  };
+
+  const handleChange = ({ target: { value } }) => {
+    setModal({ ...modal, value });
+  };
+  const handleClose = () => {
+    setModal({ open: false, value: "", isEdit: false });
+  };
+
+  const callBack = () => {
+    axios.get(" https://jsonplaceholder.typicode.com/comments").then((res) => {
+      setTweets(res.data);
+    });
+    handleClose();
+  };
+
+  const submit = () => {
+    const { isEdit, id } = modal;
+    if (isEdit) {
+      axios
+        .put(`https://jsonplaceholder.typicode.com/comments/${id}`, modal.value)
+        .then(() => callBack());
+      return;
+    }
+    axios
+      .post(`https://jsonplaceholder.typicode.com/comments`, modal.value)
+      .then(() => callBack());
+  };
+
   return (
     <div id="tweets">
       <div>
-        {/* <span onClick={viewHome} className="cursor">
-          Go Back
-        </span> */}
       </div>
       <Button variant="contained" className="mb-1 float" onClick={openModal}>
         Add Tweet
@@ -58,7 +80,10 @@ const Tweets = () => {
           <Grid item xs={12} sm={12} md={6} lg={3} key={id}>
             <div className="list" key={id}>
               <div className="flex-end">
-                <EditIcon className="cursor" onClick={() => editTweet(id)} />
+                <EditIcon
+                  className="cursor"
+                  onClick={() => openEditTweet(id, body)}
+                />
                 <DeleteIcon
                   className="cursor"
                   onClick={() => deleteTweet(id)}
@@ -81,15 +106,21 @@ const Tweets = () => {
         <Modal
           open={modal.open}
           title={modal.isEdit ? "Edit Tweet" : "Add Tweet"}
+          handleClose={handleClose}
+          submit={submit}
         >
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Email Address"
-            type="email"
+            label="Tweets"
+            type="text"
             fullWidth
-            variant="standard"
+            variant="outlined"
+            multiline
+            rows={3}
+            value={modal.value}
+            onChange={handleChange}
           />
         </Modal>
       )}

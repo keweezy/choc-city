@@ -6,9 +6,9 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import "./styles.scss";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import { CardActionArea } from "@mui/material";
 import { useLocation, useNavigate, useParams } from "react-router";
-import img from "../../../assests/chocolatecity.jpeg";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const Albums = () => {
   // helpers
@@ -38,13 +38,12 @@ const Albums = () => {
   const viewHome = () => {
     history(`/`);
   };
-  
+
   return (
     <div id="albums">
       <div>
-        <span onClick={viewHome} className="cursor">
-          Go Back
-        </span>
+        <ArrowBackIcon onClick={viewHome} className="cursor" />
+
         <h2>{location.state} Albums</h2>
       </div>
       <Grid container spacing={3}>
