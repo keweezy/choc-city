@@ -5,8 +5,18 @@ import { Grid } from "@mui/material";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router";
+import Tweets from "./Tweets/Tweets";
 
 const HomePage = () => {
+  // helpers
+  let history = useNavigate();
+
   // States
   const [allArtiste, setAllArtiste] = useState([]);
   const [albums, setAlbums] = useState([]);
@@ -29,7 +39,12 @@ const HomePage = () => {
     setValue(newValue);
   };
 
-  console.log(albums)
+  // go to home Page
+  const viewAlbum = (id, name) => {
+    history(`/albums/${id}`, { state: name });
+  };
+
+  console.log(albums);
 
   return (
     <div id="home-page">
@@ -41,29 +56,48 @@ const HomePage = () => {
           marginBottom: "1.5rem",
         }}
       >
-        <Tabs value={value} onChange={handleChange} centered>
-          <Tab label="Our Artiste" />
-          <Tab label="Albums" />
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          centered
+          style={{ backgroundColor: "aliceblue" }}
+        >
+          <Tab label="Artiste" />
+          <Tab label="Tweets" />
         </Tabs>
       </Box>
 
       {/* Artiste List */}
       {value === 0 && (
-        <Grid container spacing={3}>
-          {/* List of Artsite */}
-          {allArtiste.map(({ name, id, email, phone }) => (
-            <Grid item xs={12} sm={12} md={6} lg={3} key={id}>
-              <div className="list">
-                <h4>Name: {name}</h4>
-                <div className="">
-                  <p>Email: {email}</p>
-                  <p>Phone: {phone}</p>
-                </div>
-              </div>
-            </Grid>
-          ))}
-        </Grid>
+        <div>
+          <h2 className="mb-3"> Artistes</h2>
+          <Grid container spacing={3}>
+            {/* List of Artsite */}
+            {allArtiste.map(({ name, id, email, phone }) => (
+              <Grid item xs={12} sm={12} md={6} lg={3} key={id}>
+                <Card sx={{ minWidth: 275 }}>
+                  <CardContent>
+                    <Typography className="mb-1" variant="h5" component="div">
+                      {name}
+                    </Typography>
+                    <Typography className="mb-1" variant="body2">
+                      Email: {email}
+                    </Typography>
+                    <Typography variant="body2">Phone:{phone}</Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button size="small" onClick={() => viewAlbum(id, name)}>
+                      View Albums
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </div>
       )}
+
+      {value === 1 && <Tweets />}
     </div>
   );
 };

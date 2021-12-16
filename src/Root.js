@@ -4,6 +4,7 @@ import {
   Routes,
   Redirect,
 } from "react-router-dom";
+import Albums from "./Pages/Homepage/Albums/Albums";
 import HomePage from "./Pages/Homepage/HomePage";
 
 const Root = () => {
@@ -11,6 +12,7 @@ const Root = () => {
     <Router>
       <Routes>
         <Route path="/" exact element={<HomePage />} />
+        <Route path="/albums/:id" exact element={<Albums />} />
       </Routes>
     </Router>
   );
